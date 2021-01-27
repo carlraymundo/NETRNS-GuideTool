@@ -1,5 +1,35 @@
+def IPV4checker(ipAddress):
+    temp = list(map(int, ipAddress.split(".")))
+    
+    #if ip length (temp) is not 4 after split (invalid)
+    if(len(temp) != 4):
+        return False
+    
+    #Ip value checker (if invalid)
+    for i in temp:
+        if i >= 256 or i  < 0:
+            return False
+    
+    return True
+
+def Prefixchecker(prefixLength):
+    if(prefixLength >= 0) and (prefixLength <= 32):
+        return True
+    else:
+        return False
+    
+
 def subnetCalculator():
-    print("subnet")
+    ipString = input("Input IP Address: ")
+    temp = ipString.split("/")
+    ipAddress = temp[0]
+    prefixLength = int(temp[1])
+    
+    results = []
+    
+    if IPV4checker(ipAddress) and Prefixchecker(prefixLength):
+        networks = int(input("Input network num: "))
+    
 
 def checkAddressClass():
     print("Checking")
