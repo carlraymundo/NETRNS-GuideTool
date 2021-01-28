@@ -37,7 +37,8 @@ def getHostsNum(value):
 def subnetMaskToBin(subnetMask):
     temp = ""
     temp = "1" * subnetMask
-    return temp.ljust(32,"0")
+    temp = temp.ljust(32,"0")
+    return temp
 
 def binaryToIp(binary):
     temp = [binary[x:x+8] for x in range(0, len(binary), 8)]
@@ -49,8 +50,9 @@ def binaryToIp(binary):
     
 def octetToBinary(value):
     octet = ""
-    octetValue = bin(int(value)).replace("0b", "").rjust(8, "0")
-    octet = str(octetValue)
+    octet = bin(int(value)).replace("0b", "")
+    octet = octet.rjust(8, "0")
+    octet = str(octet)
     return octet
 
 def ipToBinary(ip):
@@ -139,12 +141,14 @@ def subnetCalculator():
             #Address Information    
             #first usable address
             temp = networkAddress(currentAddress,currentSubnetMask)
-            temp = bin(int(ipToBinary(temp),2) + int("1",2)).replace("0b", "").rjust(32, "0")
+            temp = bin(int(ipToBinary(temp),2) + int("1",2)).replace("0b", "")
+            temp = temp.rjust(32, "0")
             temp = binaryToIp(temp)
             output.append(temp)
             #last usable address
             temp = broadcastAddress(currentAddress,currentSubnetMask)
-            temp = bin(int(ipToBinary(temp),2) - int("1",2)).replace("0b", "").rjust(32, "0")
+            temp = bin(int(ipToBinary(temp),2) - int("1",2)).replace("0b", "")
+            temp = temp.rjust(32, "0")
             temp = binaryToIp(temp)
             output.append(temp)
             #Broadcast Address
@@ -163,7 +167,8 @@ def subnetCalculator():
             #For next ip address
             networkId += 1
             temp = broadcastAddress(currentAddress,currentSubnetMask)
-            temp = bin(int(ipToBinary(temp), 2) + int("1", 2)).replace("0b", "").rjust(32, "0")
+            temp = bin(int(ipToBinary(temp), 2) + int("1", 2)).replace("0b", "")
+            temp = temp.rjust(32, "0")
             temp = binaryToIp(temp)
             currentAddress = temp
 
@@ -252,21 +257,24 @@ def exit():
     print("Good Luck Network Admin!")
 
 def main():
-  print("Hello there Network Admin!\n")
-  print("In order to help you, please select any of the following options:")
-  print("[1] Subnet Calculator")
-  print("[2] Check Address Class")
-  print("[3] Check Address Type")
-  print("[4] Exit\n")
+  loop = True
+  while loop == True:
+    print("\nHello there Network Admin!\n")
+    print("In order to help you, please select any of the following options:")
+    print("[1] Subnet Calculator")
+    print("[2] Check Address Class")
+    print("[3] Check Address Type")
+    print("[4] Exit\n")
 
-  menu = input("Input: ")
-  if int(menu) == 1:
+    menu = input("Input: ")
+    if int(menu) == 1:
       subnetCalculator()
-  elif int(menu) == 2:
+    elif int(menu) == 2:
       checkAddressClass()
-  elif int(menu) == 3:
+    elif int(menu) == 3:
       checkAddressType()
-  else:
+    else:
+      loop = False
       exit()
 
 #main function
