@@ -114,11 +114,7 @@ def subnetCalculator():
             
             #Prefix Length
             output.append("/" + str(currentSubnetMask))
-            
-            #Usable Ip num
-            usableIpNum = int((2 ** hosts) - 2)
-            output.append(usableIpNum)
-            
+        
             
             #first usable address
             temp = networkAddress(currentAddress,currentSubnetMask)
@@ -132,7 +128,36 @@ def subnetCalculator():
             temp = binaryToIp(temp)
             output.append(temp)
 
+            #Broadcast Address
+            broadcast = broadcastAddress(currentAddress,currentSubnetMask)
+            output.append(broadcast)
+
+            #Usable Ip num
+            usableIpNum = int((2 ** hosts) - 2)
+            output.append(usableIpNum)
+
+            #Free IP's
+            unusedAddress = int((2 ** hosts) - 2) - j[1]
+            output.append(unusedAddress)
+
             print(output)
+
+            results.append(output)
+
+            networkId += 1
+            temp = broadcastAddress(currentAddress,currentSubnetMask)
+            temp = bin(int(ipToBinary(temp), 2) + int("1", 2)).replace("0b", "").rjust(32, "0")
+            temp = binaryToIp(temp)
+            currentAddress = temp
+
+    elif Prefixchecker(prefixLength) == False:
+        print("Invalid Prefix Length Input!")
+    
+    else:
+        print("Invalid Ip Address Input!")
+
+
+            
             
         
     
