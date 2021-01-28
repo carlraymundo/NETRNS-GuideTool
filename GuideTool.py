@@ -19,6 +19,7 @@ def IPV4checker(ipAddress):
     return True
 
 def Prefixchecker(prefixLength):
+    #check if valid
     if(prefixLength > 0) and (prefixLength <= 32):
         return True
     else:
@@ -78,12 +79,14 @@ def broadcastAddress(ipAddress, prefixLength):
 
 def displayTable(results):
     #print(results)
+    #Network Information
     print("\nNetwork Information\n")
     table = PrettyTable(["ID", "Network Name", "Network Address", "Subnet Mask" , "Prefix Length"])
     for i in range(len(results)):
         table.add_row([results[i][0], results[i][1], results[i][2], results[i][3], results[i][4]])
     print(table)
 
+    #Address Information
     print("\nAddress Information\n")
     table2 = PrettyTable(["ID", "First Usable Addr", "Last Usable Addr", "Broadcast Address" , "Usable IPs", "Free IPs"])
     for j in range(len(results)):
@@ -115,53 +118,44 @@ def subnetCalculator():
         subnetsArray.sort(key = lambda x:x[1], reverse = True)
         
         for j in subnetsArray:
-            #Network Imformation
+            #Network Information
             output = []
             
-            #Network ID
+            #ID
             output.append(int(networkId + 1))
-            
             #Network Name
             output.append(j[0])
-            
             #Curent Network 
             output.append(currentAddress)
-            
             #Subnet Mask
             hosts = int(getHostsNum(j[1]))
             currentSubnetMask = 32 - hosts
             #print(binaryToIp(subnetMaskToBin(currentSubnetMask)))
             output.append(binaryToIp(subnetMaskToBin(currentSubnetMask)))
-            
             #Prefix Length
             output.append("/" + str(currentSubnetMask))
         
-            #Address Information
-            
+
+            #Address Information    
             #first usable address
             temp = networkAddress(currentAddress,currentSubnetMask)
             temp = bin(int(ipToBinary(temp),2) + int("1",2)).replace("0b", "").rjust(32, "0")
             temp = binaryToIp(temp)
             output.append(temp)
-
             #last usable address
             temp = broadcastAddress(currentAddress,currentSubnetMask)
             temp = bin(int(ipToBinary(temp),2) - int("1",2)).replace("0b", "").rjust(32, "0")
             temp = binaryToIp(temp)
             output.append(temp)
-
             #Broadcast Address
             broadcast = broadcastAddress(currentAddress,currentSubnetMask)
             output.append(broadcast)
-
             #Usable Ip num
             usableIpNum = int((2 ** hosts) - 2)
             output.append(usableIpNum)
-
             #Free IP's
             unusedAddress = int((2 ** hosts) - 2) - j[1]
             output.append(unusedAddress)
-
             #print(output)
 
             results.append(output)
@@ -275,4 +269,6 @@ def main():
   else:
       exit()
 
+#main function
+#install PrettyTable first
 main()
