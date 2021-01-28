@@ -20,15 +20,47 @@ def Prefixchecker(prefixLength):
     
 
 def subnetCalculator():
+    print("\nSample Format: 192.168.1.0/24")
     ipString = input("Input IP Address: ")
     temp = ipString.split("/")
     ipAddress = temp[0]
     prefixLength = int(temp[1])
-    
     results = []
     
     if IPV4checker(ipAddress) and Prefixchecker(prefixLength):
+        subnetsArray = []
+        currentAddress = ipAddress
+        networkId = 0
+        
         networks = int(input("Input network num: "))
+        
+        for i in range(networks):
+            networkName = input("Input the name of network " + str(i + 1) + ":")
+            ipNeeded = int(input("Input the number of IP Addresses needed: "))
+            subnetsArray.append((networkName,ipNeeded))
+        subnetsArray.sort(key = lambda x:x[1], reverse = True)
+        
+        for j in subnetArray:
+            #Network Imformation:
+            output = []
+            
+            #Network ID
+            temp.append(int(networkID + 1))
+            
+            #Network Name
+            temp.append(i[0])
+            
+            #Curent Network 
+            temp.append(currentAddress)
+            
+            #Subnet Mask
+            
+            
+            
+        
+            
+        
+    
     
 
 def checkAddressClass():
