@@ -36,11 +36,32 @@ def subnetMaskToBin(subnetMask):
 def binaryToIp(binary):
     temp = [binary[x:x+8] for x in range(0, len(binary), 8)]
     temp = list(map(lambda temp: int(temp, 2), temp))
-    IP = ""
+    ipAddress = ""
     for x in temp:
-        IP = IP + str(x) + "."
-    return IP[:-1]
+        ipAddress = ipAddress + str(x) + "."
+    return ipAddress[:-1]
     
+def octetToBinary(value):
+    octet = ""
+    octetValue = bin(int(value)).replace("0b", "").rjust(8, "0")
+    octet = str(octetValue)
+    return octet
+
+def ipToBinary(ip):
+    ipTemp = ""
+    ipList = ip.split(".")
+    for i in ipList:
+        ipTemp = ipTemp + octetToBinary(i)
+    
+    return ipTemp
+    
+def networkAddress(ipAddress,prefixLength):
+    bits = subnetMaskToBin(prefixLength).count("0")
+    ip = ipToBinary(ipAddress)
+    ip = ip[-bits]
+    ip = ip.ljust(32,"0")
+    
+    return binaryToIp(ip)
 
 def subnetCalculator():
     print("\nSample Format: 192.168.1.0/24")
@@ -83,7 +104,16 @@ def subnetCalculator():
             print(binaryToIp(subnetMaskToBin(currentSubnetMask)))
             temp.append(binaryToIp(subnetMaskToBin(currentSubnetMask)))
             
+            #Prefix Length
+            temp.append("/" + str(currentSubnetMask))
             
+            #Usable Ip num
+            usableIpNum = int((2 ** hosts) - 2)
+            temp.append(usableIpNum)
+            
+            
+            #first usable address
+            firstAdd = networkAddress(currentAddress,currentSubnetMask)
             
         
             
