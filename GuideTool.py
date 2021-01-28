@@ -58,9 +58,17 @@ def ipToBinary(ip):
 def networkAddress(ipAddress,prefixLength):
     bits = subnetMaskToBin(prefixLength).count("0")
     ip = ipToBinary(ipAddress)
-    ip = ip[-bits]
+    ip = ip[:-bits]
     ip = ip.ljust(32,"0")
     
+    return binaryToIp(ip)
+
+def broadcastAddress(ipAddress, prefixLength):
+    bits = subnetMaskToBin(prefixLength).count("0")
+    ip = ipToBinary(ipAddress)
+    ip = ip[:-bits]
+    ip = ip.ljust(32,"1")
+
     return binaryToIp(ip)
 
 def subnetCalculator():
@@ -90,32 +98,41 @@ def subnetCalculator():
             output = []
             
             #Network ID
-            temp.append(int(networkId + 1))
+            output.append(int(networkId + 1))
             
             #Network Name
-            temp.append(j[0])
+            output.append(j[0])
             
             #Curent Network 
-            temp.append(currentAddress)
+            output.append(currentAddress)
             
             #Subnet Mask
             hosts = int(getHostsNum(j[1]))
             currentSubnetMask = 32 - hosts
             print(binaryToIp(subnetMaskToBin(currentSubnetMask)))
-            temp.append(binaryToIp(subnetMaskToBin(currentSubnetMask)))
+            output.append(binaryToIp(subnetMaskToBin(currentSubnetMask)))
             
             #Prefix Length
-            temp.append("/" + str(currentSubnetMask))
+            output.append("/" + str(currentSubnetMask))
             
             #Usable Ip num
             usableIpNum = int((2 ** hosts) - 2)
-            temp.append(usableIpNum)
+            output.append(usableIpNum)
             
             
             #first usable address
-            firstAdd = networkAddress(currentAddress,currentSubnetMask)
-            
-        
+            temp = networkAddress(currentAddress,currentSubnetMask)
+            temp = bin(int(ipToBinary(temp),2) + int("1",2)).replace("0b", "").rjust(32, "0")
+            temp = binaryToIp(temp)
+            output.append(temp)
+
+            #last usable
+            temp = broadcastAddress(currentAddress,currentSubnetMask)
+            temp = bin(int(ipToBinary(temp),2) - int("1",2)).replace("0b", "").rjust(32, "0")
+            temp = binaryToIp(temp)
+            output.append(temp)
+
+            print(output)
             
         
     
