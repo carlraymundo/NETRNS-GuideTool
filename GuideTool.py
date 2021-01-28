@@ -1,3 +1,9 @@
+#PrettyTable link: https://pypi.org/project/prettytable/
+#Installation: python -m pip install -U prettytable
+#python -m pip install -U git+https://github.com/jazzband/prettytable
+
+from prettytable import PrettyTable
+
 def IPV4checker(ipAddress):
     temp = list(map(int, ipAddress.split(".")))
     
@@ -20,7 +26,6 @@ def Prefixchecker(prefixLength):
     
 #to get the minimum number of hosts possible
 def getHostsNum(value):
-    
     exp = 0
     
     while int(value) > ((2 ** exp) - 2):
@@ -71,6 +76,22 @@ def broadcastAddress(ipAddress, prefixLength):
 
     return binaryToIp(ip)
 
+def displayTable(results):
+    #print(results)
+    print("\nNetwork Information\n")
+    table = PrettyTable(["ID", "Network Name", "Network Address", "Subnet Mask" , "Prefix Length"])
+    for i in range(len(results)):
+        table.add_row([results[i][0], results[i][1], results[i][2], results[i][3], results[i][4]])
+    print(table)
+
+    print("\nAddress Information\n")
+    table2 = PrettyTable(["ID", "First Usable Addr", "Last Usable Addr", "Broadcast Address" , "Usable IPs", "Free IPs"])
+    for j in range(len(results)):
+      table2.add_row([results[j][0], results[j][5], results[j][6],results[j][7], results[j][8], results[j][9]])
+    print(table2)
+
+
+
 def subnetCalculator():
     print("\nSample Format: 192.168.1.0/24")
     ipString = input("Input IP Address: ")
@@ -94,7 +115,7 @@ def subnetCalculator():
         subnetsArray.sort(key = lambda x:x[1], reverse = True)
         
         for j in subnetsArray:
-            #Network Imformation:
+            #Network Imformation
             output = []
             
             #Network ID
@@ -109,12 +130,13 @@ def subnetCalculator():
             #Subnet Mask
             hosts = int(getHostsNum(j[1]))
             currentSubnetMask = 32 - hosts
-            print(binaryToIp(subnetMaskToBin(currentSubnetMask)))
+            #print(binaryToIp(subnetMaskToBin(currentSubnetMask)))
             output.append(binaryToIp(subnetMaskToBin(currentSubnetMask)))
             
             #Prefix Length
             output.append("/" + str(currentSubnetMask))
         
+            #Address Information
             
             #first usable address
             temp = networkAddress(currentAddress,currentSubnetMask)
@@ -122,7 +144,7 @@ def subnetCalculator():
             temp = binaryToIp(temp)
             output.append(temp)
 
-            #last usable
+            #last usable address
             temp = broadcastAddress(currentAddress,currentSubnetMask)
             temp = bin(int(ipToBinary(temp),2) - int("1",2)).replace("0b", "").rjust(32, "0")
             temp = binaryToIp(temp)
@@ -140,15 +162,18 @@ def subnetCalculator():
             unusedAddress = int((2 ** hosts) - 2) - j[1]
             output.append(unusedAddress)
 
-            print(output)
+            #print(output)
 
             results.append(output)
 
+            #For next ip address
             networkId += 1
             temp = broadcastAddress(currentAddress,currentSubnetMask)
             temp = bin(int(ipToBinary(temp), 2) + int("1", 2)).replace("0b", "").rjust(32, "0")
             temp = binaryToIp(temp)
             currentAddress = temp
+
+        displayTable(results)
 
     elif Prefixchecker(prefixLength) == False:
         print("Invalid Prefix Length Input!")
@@ -180,11 +205,11 @@ def checkAddressClass():
             ipClass = "C"
             classPrefix = 24
         
-        elif octet[0] >= 224 and octets[0] <= 239:
+        elif octets[0] >= 224 and octets[0] <= 239:
             ipClass = "D"
             classPrefix = 0
         
-        elif octet[0] >= 240 and octet[0] <= 255:
+        elif octets[0] >= 240 and octets[0] <= 255:
             ipClass = "E"
             classPrefix = 0
 
