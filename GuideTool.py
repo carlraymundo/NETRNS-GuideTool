@@ -204,13 +204,30 @@ def checkAddressClass():
         print("Invalid Ip Address Input")
 
 
-
-
-
-
     
 def checkAddressType():
-    print("Check 2")
+    print("Sample: 192.168.1.1/24")
+    ipInputString = input("Input Ip Address: ")
+    temp = ipInputString.split("/")
+    ipAdd = temp[0]
+    prefix = int(temp[1])
+
+    if IPV4checker(ipAdd) and Prefixchecker(prefix) == True:
+        ipType = ""
+        if (ipAdd == networkAddress(ipAdd,prefix)):
+            ipType = "Network"
+        elif (ipAdd == broadcastAddress(ipAdd,prefix)):
+            ipType = "Broadcast"
+        else:
+            ipType = "Host"
+        
+        print("The IP Address " + ipInputString + " is a " + ipType + " Address ")
+    
+    elif Prefixchecker == False:
+        print("Invalid Prefix Input")
+    
+    else:
+        print("Invalid Ip Address Input")
 
 def exit():
     print("Good Luck Network Admin!")
