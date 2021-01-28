@@ -156,15 +156,58 @@ def subnetCalculator():
     else:
         print("Invalid Ip Address Input!")
 
-
-            
-            
-        
-    
-    
-
 def checkAddressClass():
-    print("Checking")
+    ipInput = input("Input IP Address: ")
+
+    if IPV4checker(ipInput) == True:
+        octets = list(map(int, ipInput.split(".")))
+        ipClass = ""
+        classPrefix = 0
+
+        if octets[0] >= 0 and octets[0] <= 126:
+            ipClass = "A"
+            classPrefix = 8
+        
+        elif octets[0] == 127:
+            ipClass= "Special Purpose"
+            classPrefix = 8
+        
+        elif octets[0] >= 128 and octets[0] <= 191:
+            ipClass = "B"
+            classPrefix = 16
+        
+        elif octets[0] >= 192 and octets[0] <= 223:
+            ipClass = "C"
+            classPrefix = 24
+        
+        elif octet[0] >= 224 and octets[0] <= 239:
+            ipClass = "D"
+            classPrefix = 0
+        
+        elif octet[0] >= 240 and octet[0] <= 255:
+            ipClass = "E"
+            classPrefix = 0
+
+        if classPrefix != 0:
+            netAddress = networkAddress(ipInput,classPrefix)
+        
+        if ipClass == "Special Purpose":
+            print("The IP Address: " + ipInput + " is a " + ipClass + " Address indicating the LoopBack Address range of " + netAddress + "/" + str(classPrefix))
+        
+        elif ipClass == "D" or ipClass == "E":
+            print("The IP Address: " + ipInput + " is a Class " + ipClass + " Address")
+        
+        else:
+            print("The IP Address: " + ipInput + " is a Class " + ipClass + " Address, whose network address is " + netAddress + "/" + str(classPrefix))
+
+    else:
+        print("Invalid Ip Address Input")
+
+
+
+
+
+
     
 def checkAddressType():
     print("Check 2")
