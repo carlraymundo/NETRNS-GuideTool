@@ -13,10 +13,33 @@ def IPV4checker(ipAddress):
     return True
 
 def Prefixchecker(prefixLength):
-    if(prefixLength >= 0) and (prefixLength <= 32):
+    if(prefixLength > 0) and (prefixLength <= 32):
         return True
     else:
         return False
+    
+#to get the minimum number of hosts possible
+def getHostsNum(value):
+    
+    exp = 0
+    
+    while int(value) > ((2 ** exp) - 2):
+        exp+=1
+    
+    return exp
+    
+def subnetMaskToBin(subnetMask):
+    temp = ""
+    temp = "1" * subnetMask
+    return temp.ljust(32,"0")
+
+def binaryToIp(binary):
+    temp = [binary[x:x+8] for x in range(0, len(binary), 8)]
+    temp = list(map(lambda temp: int(temp, 2), temp))
+    IP = ""
+    for x in temp:
+        IP = IP + str(x) + "."
+    return IP[:-1]
     
 
 def subnetCalculator():
@@ -30,6 +53,7 @@ def subnetCalculator():
     if IPV4checker(ipAddress) and Prefixchecker(prefixLength):
         subnetsArray = []
         currentAddress = ipAddress
+        
         networkId = 0
         
         networks = int(input("Input network num: "))
@@ -40,20 +64,24 @@ def subnetCalculator():
             subnetsArray.append((networkName,ipNeeded))
         subnetsArray.sort(key = lambda x:x[1], reverse = True)
         
-        for j in subnetArray:
+        for j in subnetsArray:
             #Network Imformation:
             output = []
             
             #Network ID
-            temp.append(int(networkID + 1))
+            temp.append(int(networkId + 1))
             
             #Network Name
-            temp.append(i[0])
+            temp.append(j[0])
             
             #Curent Network 
             temp.append(currentAddress)
             
             #Subnet Mask
+            hosts = int(getHostsNum(j[1]))
+            currentSubnetMask = 32 - hosts
+            print(binaryToIp(subnetMaskToBin(currentSubnetMask)))
+            temp.append(binaryToIp(subnetMaskToBin(currentSubnetMask)))
             
             
             
